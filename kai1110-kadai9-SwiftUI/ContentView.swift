@@ -1,21 +1,65 @@
-//
-//  ContentView.swift
-//  kai1110-kadai9-SwiftUI
-//
-//  Created by 渡邊魁優 on 2022/12/21.
-//
 
 import SwiftUI
 
 struct ContentView: View {
+    @State var selection = "未選択"
+    @State var isPresentSelectionView = false
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        HStack(spacing: 60) {
+            Text("都道府県")
+            Text("\(selection)")
+            Button(action: {
+                isPresentSelectionView.toggle()
+            }) {
+                Text("入力")
+            }
+            .sheet(isPresented: $isPresentSelectionView) {
+                SelectionView(isPresentSelectionView: $isPresentSelectionView,
+                              selection: $selection)
+            }
         }
-        .padding()
+    }
+}
+
+struct SelectionView: View {
+    @Binding var isPresentSelectionView: Bool
+    @Binding var selection: String
+    
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 30) {
+                selectionButtonView(isPresentSelectionView: $isPresentSelectionView, selection: $selection, prefecture: "東京都")
+                selectionButtonView(isPresentSelectionView: $isPresentSelectionView, selection: $selection, prefecture: "神奈川県")
+                selectionButtonView(isPresentSelectionView: $isPresentSelectionView, selection: $selection, prefecture: "埼玉県")
+                selectionButtonView(isPresentSelectionView: $isPresentSelectionView, selection: $selection, prefecture: "千葉県")
+                Spacer()
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(action: {
+                                isPresentSelectionView.toggle()
+                            }) {
+                                Text("cancel")
+                            }
+                        }
+                }
+            }
+        }
+    }
+}
+
+struct selectionButtonView: View {
+    @Binding var isPresentSelectionView: Bool
+    @Binding var selection: String
+    let prefecture: String
+    
+    var body: some View {
+        Button(action: {
+            selection = prefecture
+            isPresentSelectionView.toggle()
+        }) {
+            Text("\(prefecture)")
+        }
     }
 }
 
