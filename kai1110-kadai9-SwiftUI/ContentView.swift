@@ -10,7 +10,7 @@ struct ContentView: View {
             Text("都道府県")
             Text("\(selection)")
             Button(action: {
-                isPresentSelectionView.toggle()
+                isPresentSelectionView = true
             }) {
                 Text("入力")
             }
@@ -25,14 +25,19 @@ struct ContentView: View {
 struct SelectionView: View {
     @Binding var isPresentSelectionView: Bool
     @Binding var selection: String
+
+    private let prefectures = ["東京都", "神奈川県", "埼玉県", "千葉県"]
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 30) {
-                selectionButtonView(isPresentSelectionView: $isPresentSelectionView, selection: $selection, prefecture: "東京都")
-                selectionButtonView(isPresentSelectionView: $isPresentSelectionView, selection: $selection, prefecture: "神奈川県")
-                selectionButtonView(isPresentSelectionView: $isPresentSelectionView, selection: $selection, prefecture: "埼玉県")
-                selectionButtonView(isPresentSelectionView: $isPresentSelectionView, selection: $selection, prefecture: "千葉県")
+                ForEach(prefectures, id: \.self) { prefecture in
+                    Button(prefecture) {
+                        selection = prefecture
+                        isPresentSelectionView = false
+                    }
+                }
+
                 Spacer()
                     .toolbar {
                         ToolbarItem(placement: .navigationBarLeading) {
@@ -44,21 +49,6 @@ struct SelectionView: View {
                         }
                 }
             }
-        }
-    }
-}
-
-struct selectionButtonView: View {
-    @Binding var isPresentSelectionView: Bool
-    @Binding var selection: String
-    let prefecture: String
-    
-    var body: some View {
-        Button(action: {
-            selection = prefecture
-            isPresentSelectionView.toggle()
-        }) {
-            Text("\(prefecture)")
         }
     }
 }
